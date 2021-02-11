@@ -43,3 +43,6 @@ class Comma10k(Dataset):
             mask = self.transform(mask)
 
         return {'image':image, 'gt_mask':mask}
+
+if __name__=='__main__':
+    print("Hello World !!")
