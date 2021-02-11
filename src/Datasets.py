@@ -1,24 +1,26 @@
 import os
 import torch
+from PIL import Image
 from torch.utils.data import Dataset
-
 class Comma10k(Dataset):
     """Comma 10k Semantic Segmentation dataset."""
 
     def __init__(self, df, root_dir, width=None, height=None, transform=None):
         """
         Args:
-            csv_file (string): Path to the csv file with annotations.
+            df (dataframe): Dataframe containing list of images.
             root_dir (string): Directory with all the images.
             transform (callable, optional): Optional transform to be applied on a sample.
         """
+
         self.data        = df
         self.root_dir    = root_dir
         self.transform   = transform
-        self.imgs_dir    = os.path.join(root_dir, 'images')
-        self.masks_dir   = os.path.join(root_dir, 'masks')
         self.new_width   = width
         self.new_height  = height
+
+        self.imgs_dir    = os.path.join(root_dir, 'images')
+        self.masks_dir   = os.path.join(root_dir, 'masks')
     
     def __len__(self):
         return len(self.data)
