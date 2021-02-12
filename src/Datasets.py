@@ -1,6 +1,7 @@
 import os
-import torch
+import numpy as np
 from PIL import Image
+import torch
 from torch.utils.data import Dataset
 class Comma10k(Dataset):
     """Comma 10k Semantic Segmentation dataset."""
@@ -21,7 +22,7 @@ class Comma10k(Dataset):
 
         self.imgs_dir    = os.path.join(root_dir, 'images')
         self.masks_dir   = os.path.join(root_dir, 'masks')
-    
+
     def __len__(self):
         return len(self.data)
 
@@ -29,14 +30,16 @@ class Comma10k(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        img_name  = os.path.join(self.root_dir, self.imgs, self.data[idx])
-        mask_name = os.path.join(self.root_dir, self.masks, self.data[idx])
+        img_name  = os.path.join(self.imgs_dir, self.data[idx])
+        mask_name = os.path.join(self.masks_dir, self.data[idx])
         
         image = Image.open(img_name)
         mask  = Image.open(mask_name)
 
         #image = transform.resize(image, (self.new_height, self.new_width))
         #mask = transform.resize(mask, (self.new_height, self.new_width))
+
+        #@mask = np.stack([(mask == v) for v in [41,  76,  90, 124, 161, 0]], axis=-1).astype('uint8')
         
         if self.transform:
             image = self.transform(image)
@@ -44,5 +47,3 @@ class Comma10k(Dataset):
 
         return {'image':image, 'gt_mask':mask}
 
-if __name__=='__main__':
-    print("Hello World !!")
